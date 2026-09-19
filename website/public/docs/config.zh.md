@@ -668,6 +668,8 @@ QwenPaw 需要 LLM 提供商才能运行。配置存储在 `$QWENPAW_SECRET_DIR/
 | SiliconFlow（International）            | `siliconflow-intl`       | 硅基流动国际版                |
 | 自定义                                  | `custom`                 | 自定义 OpenAI 兼容服务        |
 
+OpenCode Zen 的免费模型仅限 OpenCode 客户端使用，QwenPaw 不会把它们作为可直接调用的 API 模型展示。请使用 Zen 的付费模型，或切换到 OpenCode Go 端点并选择该端点实际提供的模型。
+
 > **完整配置说明：** 每个提供商的详细配置方式、`providers.json` 字段结构、模型发现等请参见 [模型](./models)。
 
 > **提示：** 运行 `qwenpaw init` 跟着提示走就行——它会列出每个提供商的可用模型让你直接选。

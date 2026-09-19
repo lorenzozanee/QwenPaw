@@ -158,7 +158,7 @@ async def test_opencode_excludes_unavailable_free_models(monkeypatch) -> None:
     provider = OpenCodeProvider(
         id="opencode",
         name="OpenCode",
-        base_url="https://opencode.ai/zen/v1",
+        base_url="https://opencode.ai/zen/v1/",
         require_api_key=False,
     )
     rows = [
@@ -166,6 +166,11 @@ async def test_opencode_excludes_unavailable_free_models(monkeypatch) -> None:
         SimpleNamespace(id="mimo-v2.5-free"),
         SimpleNamespace(id="nemotron-3-super-free"),
         SimpleNamespace(id="nemotron-3-ultra-free"),
+        SimpleNamespace(id="nemotron-3.5-lightning-free"),
+        SimpleNamespace(id="ling-3.0-flash-fin-free"),
+        SimpleNamespace(id="big-pickle"),
+        SimpleNamespace(id="explicit-free", isFree=True),
+        SimpleNamespace(id="paid-model", isFree=False),
     ]
 
     class FakeModels:
@@ -179,11 +184,34 @@ async def test_opencode_excludes_unavailable_free_models(monkeypatch) -> None:
 
     models = await provider.fetch_models()
 
-    assert [model.id for model in models] == [
-        "mimo-v2.5-free",
-        "nemotron-3-ultra-free",
-    ]
-    assert all(model.is_free for model in models)
+    assert [model.id for model in models] == ["paid-model"]
+    assert all(not model.is_free for model in models)
+    close.assert_awaited_once()
+
+
+async def test_opencode_go_keeps_gateway_free_models(monkeypatch) -> None:
+    provider = OpenCodeProvider(
+        id="opencode",
+        name="OpenCode",
+        base_url="https://opencode.ai/zen/go/v1",
+        require_api_key=False,
+    )
+
+    class FakeModels:
+        async def list(self, timeout=None):
+            _ = timeout
+            return SimpleNamespace(
+                data=[SimpleNamespace(id="go-model-free")],
+            )
+
+    close = AsyncMock()
+    fake_client = SimpleNamespace(models=FakeModels(), close=close)
+    monkeypatch.setattr(provider, "_client", lambda timeout=5: fake_client)
+
+    models = await provider.fetch_models()
+
+    assert [model.id for model in models] == ["go-model-free"]
+    assert models[0].is_free
     close.assert_awaited_once()
 
 

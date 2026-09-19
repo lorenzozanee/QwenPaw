@@ -912,21 +912,29 @@ class OpenCodeProvider(_FreeSuffixProviderMixin, OpenAIProvider):
     _FREE_SUFFIX = "-free"
     _UNAVAILABLE_MODEL_IDS: ClassVar[frozenset[str]] = frozenset(
         {
+            "big-pickle",
             "deepseek-v4-flash-free",
+            "ling-3.0-flash-fin-free",
+            "mimo-v2.5-free",
             "nemotron-3-super-free",
+            "nemotron-3-ultra-free",
+            "nemotron-3.5-lightning-free",
         },
     )
+    _ZEN_BASE_URL = "https://opencode.ai/zen/v1"
 
     async def fetch_models(
         self,
         timeout: float = 5,
     ) -> List[ModelInfo]:
-        """Exclude models that OpenCode lists but no longer serves."""
+        """Exclude Zen free-tier models unavailable to direct API clients."""
         models = await super().fetch_models(timeout=timeout)
+        if self.base_url.rstrip("/") != self._ZEN_BASE_URL:
+            return models
         return [
             model
             for model in models
-            if model.id not in self._UNAVAILABLE_MODEL_IDS
+            if not model.is_free and model.id not in self._UNAVAILABLE_MODEL_IDS
         ]
 
 

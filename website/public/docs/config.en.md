@@ -764,6 +764,8 @@ QwenPaw needs an LLM provider to work. You can set it up in three ways:
 | SiliconFlow (International)        | `siliconflow-intl`       | `https://api.siliconflow.com/v1`                    | `sk-`          |
 | Custom                             | `custom`                 | _(you set it)_                                      | _(any)_        |
 
+OpenCode Zen free-tier models are restricted to the OpenCode client and are not exposed as directly usable QwenPaw API models. Use a paid Zen model, or switch to the OpenCode Go endpoint when its model is available there.
+
 For each provider you need to set:
 
 | Setting    | Description                                      |

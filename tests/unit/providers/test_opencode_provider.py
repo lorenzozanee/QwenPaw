@@ -20,10 +20,13 @@ class TestOpenCodeProvider:
         assert isinstance(PROVIDER_OPENCODE, OpenAIProvider)
 
     def test_opencode_catalog_excludes_expired_free_models(self):
-        """Expired promotions and unsupported IDs stay out of the catalog."""
+        """The static catalog must not expose direct free-tier models."""
         model_ids = {model.id for model in OPENCODE_MODELS}
+        assert not any(model.is_free for model in OPENCODE_MODELS)
         assert "deepseek-v4-flash-free" not in model_ids
+        assert "mimo-v2.5-free" not in model_ids
         assert "nemotron-3-super-free" not in model_ids
+        assert "nemotron-3-ultra-free" not in model_ids
 
     def test_kilo_catalog_contains_current_free_models(self):
         """Kilo's catalog keeps the currently published free routes."""
@@ -61,9 +64,8 @@ class TestOpenCodeProvider:
         assert urls[1]["label"] == "OpenCode Go"
         assert urls[1]["value"] == "https://opencode.ai/zen/go/v1"
 
-    def test_opencode_models_non_empty_and_unique(self):
-        """Models list is non-empty with unique IDs."""
-        assert len(OPENCODE_MODELS) > 0
+    def test_opencode_models_have_unique_ids(self):
+        """Any maintained OpenCode catalog entries must have unique IDs."""
         model_ids = [m.id for m in OPENCODE_MODELS]
         assert len(model_ids) == len(set(model_ids))
 
@@ -80,11 +82,9 @@ class TestOpenCodeProvider:
         for m in OPENCODE_MODELS:
             assert m.probe_source == "documentation"
 
-    def test_opencode_models_all_free(self):
-        """All OpenCode models should be marked as free."""
-        assert all(
-            m.is_free for m in OPENCODE_MODELS
-        ), "All OPENCODE_MODELS should be free"
+    def test_opencode_models_are_not_free(self):
+        """Direct OpenCode discovery must not advertise free-tier models."""
+        assert not any(model.is_free for model in OPENCODE_MODELS)
 
     def test_opencode_registered_in_provider_manager(self):
         """opencode provider should be registerable via built-in init."""

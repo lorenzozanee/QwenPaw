@@ -971,40 +971,7 @@
         "relay_reasoning": true
       }
     ],
-    "OPENCODE_MODELS": [
-      {
-        "id": "mimo-v2.5-free",
-        "name": "Mimo V2.5",
-        "supports_image": true,
-        "supports_video": false,
-        "probe_source": "documentation",
-        "is_free": true,
-        "source": "builtin",
-        "availability_status": "unverified",
-        "availability_retryable": true,
-        "config_overrides": [],
-        "max_input_length": 131072,
-        "max_input_length_configured": false,
-        "generate_kwargs": {},
-        "relay_reasoning": true
-      },
-      {
-        "id": "nemotron-3-ultra-free",
-        "name": "Nemotron 3 Ultra",
-        "supports_image": false,
-        "supports_video": false,
-        "probe_source": "documentation",
-        "is_free": true,
-        "source": "builtin",
-        "availability_status": "unverified",
-        "availability_retryable": true,
-        "config_overrides": [],
-        "max_input_length": 131072,
-        "max_input_length_configured": false,
-        "generate_kwargs": {},
-        "relay_reasoning": true
-      }
-    ],
+    "OPENCODE_MODELS": [],
     "AZURE_OPENAI_MODELS": [
       {
         "id": "gpt-5-chat",
